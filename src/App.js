@@ -18,15 +18,25 @@ const Time = () => (
   </Consumer>
 )
 
+const User = () => (
+  <Consumer select={['user']}>
+    {({ state }) =>
+      state.user && <img src={state.user.avatar_url} width={50} />
+    }
+  </Consumer>
+)
+
 class App extends Component {
   componentDidMount = () => {
     setInterval(actions.setTime, 1000)
+    actions.getUser()
   }
   render() {
     return (
       <Provider>
         <Count />
         <Time />
+        <User />
       </Provider>
     )
   }
