@@ -19,4 +19,6 @@ const store = {
   },
 }
 
-export const { Provider, Consumer, actions, getState } = initStore(store)
+export const { Provider, Consumer, actions, getState, connect } = initStore(
+  store,
+)

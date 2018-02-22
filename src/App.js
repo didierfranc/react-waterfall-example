@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { Provider, Consumer, actions, getState } from './store'
+import { Provider, Consumer, actions, getState, connect } from './store'
 
 const Count = () => (
   <Consumer select={['count']}>
@@ -18,13 +18,10 @@ const Time = () => (
   </Consumer>
 )
 
-const User = () => (
-  <Consumer select={['user']}>
-    {({ state }) =>
-      state.user && <img src={state.user.avatar_url} width={50} />
-    }
-  </Consumer>
-)
+let User = ({ state }) =>
+  state.user && <img src={state.user.avatar_url} width={50} />
+
+User = connect(['user'])(User)
 
 class App extends Component {
   componentDidMount = () => {
