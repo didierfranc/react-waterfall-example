@@ -23,6 +23,27 @@ let User = ({ state }) =>
 
 User = connect(['user'])(User)
 
+const Score = () => (
+  <Consumer select={['score']}>
+    {({ state, actions }) => {
+      const handleChange = e => {
+        actions.updateScore(e.target.value)
+        setTimeout(actions.scoreComment, 0)
+      }
+
+      return <input type="number" value={state.score} onChange={handleChange} />
+    }}
+  </Consumer>
+)
+
+const Comment = () => (
+  <Consumer select={['comment', 'color']}>
+    {({ state, actions }) => (
+      <p style={{ color: state.color }}>{state.comment}</p>
+    )}
+  </Consumer>
+)
+
 class App extends Component {
   componentDidMount = () => {
     setInterval(actions.setTime, 1000)
@@ -31,6 +52,8 @@ class App extends Component {
   render() {
     return (
       <Provider>
+        <Score />
+        <Comment />
         <Count />
         <Time />
         <User />

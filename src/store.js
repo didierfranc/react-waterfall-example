@@ -1,10 +1,25 @@
 import { initStore } from 'react-stateful'
+import { createSelector } from 'reselect'
+import { hacker } from 'faker'
+
+const scoreComment = createSelector(
+  [({ score }) => parseInt(score, 10) > 0],
+  (positif) => ({
+    comment: positif
+      ? `Good job, but : ${hacker.phrase()}`
+      : `Something seems wrong : ${hacker.phrase()}`,
+    color: positif ? 'green' : 'red',
+  })
+)
 
 const store = {
   initialState: {
     count: 10,
     time: new Date().toLocaleTimeString(),
     user: null,
+    score: 0,
+    comment: 'update scrore',
+    color: 'black',
   },
   actions: {
     increment: ({ count }) => ({ count: count + 1 }),
@@ -16,6 +31,8 @@ const store = {
         user: body,
       }
     },
+    updateScore: (s, score) => ({ score }),
+    scoreComment,
   },
 }
 
