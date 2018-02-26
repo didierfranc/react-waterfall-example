@@ -5,11 +5,11 @@ import { devTool } from './devtool'
 
 const scoreComment = createSelector(
   [({ score }) => parseInt(score, 10) > 0],
-  (positif) => ({
-    comment: positif
+  (positive) => ({
+    comment: positive
       ? `Good job, but : ${hacker.phrase()}`
       : `Something seems wrong : ${hacker.phrase()}`,
-    color: positif ? 'green' : 'red',
+    color: positive ? 'green' : 'red',
   })
 )
 
