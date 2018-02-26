@@ -1,19 +1,18 @@
 import { initStore } from 'react-stateful'
+import { devTool } from './devtool'
 
 const store = {
   initialState: {
     count: 10,
-    time: new Date().toLocaleTimeString(),
     user: null,
   },
   actions: {
     increment: ({ count }) => ({ count: count + 1 }),
-    setTime: () => ({ time: new Date().toLocaleTimeString() }),
     getUser: async () => {
       const response = await fetch('https://api.github.com/users/didierfranc')
       const body = await response.json()
       return {
-        user: body,
+        user: { avatar: body.avatar_url },
       }
     },
   },
@@ -21,4 +20,5 @@ const store = {
 
 export const { Provider, Consumer, actions, getState, connect } = initStore(
   store,
+  devTool,
 )

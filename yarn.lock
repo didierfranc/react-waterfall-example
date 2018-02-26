@@ -2592,6 +2592,10 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
+flow-bin@^0.66.0:
+  version "0.66.0"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.66.0.tgz#a96dde7015dc3343fd552a7b4963c02be705ca26"
+
 for-in@^1.0.1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
@@ -5206,7 +5210,7 @@ react-scripts@1.1.1:
 
 "react-stateful@https://github.com/didierfranc/react-stateful.git":
   version "1.0.0"
-  resolved "https://github.com/didierfranc/react-stateful.git#3228af019c5511ad6e308e8e4d94eea1196c0083"
+  resolved "https://github.com/didierfranc/react-stateful.git#45475b144afa89049eed8021896ec042064a0af1"
   dependencies:
     fbjs "^0.8.16"
     global "^4.3.2"
