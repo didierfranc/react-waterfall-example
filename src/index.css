@@ -1,5 +1,43 @@
 body {
   margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+  flex-direction: column;
+  font-family: monospace;
+  height: 100vh
+}
+
+h1 {
+  display: block;
+  font-weight: 400;
+  font-size: 20px;
+  margin-top: 100px;
+  margin-bottom: 20px;
+}
+
+p {
+  width: 80px;
+  display: flex;
+  justify-content: space-between;
+  margin: 5px;
+}
+
+img {
+  margin-left: 30px;
+}
+
+button {
+  margin-left: 5px;
+}
+
+#root {
+  flex-direction: column;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.examples {
+  justify-content: center;
 }

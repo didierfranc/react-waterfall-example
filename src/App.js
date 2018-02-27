@@ -1,38 +1,65 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { Provider, Consumer, actions, connect } from './store'
+
+const render = {
+  root: 0,
+  count: 0,
+  user: 0,
+}
 
 const Count = () => (
   <Consumer select={['count']}>
-    {({ state, actions }) => (
-      <Fragment>
-        <span>{state.count}</span>
-        <button onClick={actions.increment}>+</button>
-      </Fragment>
-    )}
+    {({ state, actions }) => {
+      render.count++
+      return (
+        <div>
+          <span>{state.count}</span>
+          <button onClick={actions.increment}>+</button>
+        </div>
+      )
+    }}
   </Consumer>
 )
 
-const Time = () => (
-  <Consumer select={['time']}>
-    {({ state }) => <div>{state.time}</div>}
-  </Consumer>
-)
-
-let User = ({ state }) =>
-  state.user && <img src={state.user.avatar} width={50} alt="avatar" />
+let User = ({ state }) => {
+  render.user++
+  return state.user && <img src={state.user.avatar} width={50} alt="avatar" />
+}
 
 User = connect(['user'])(User)
 
 class App extends Component {
+  state = {
+    date: new Date().toLocaleTimeString(),
+  }
   componentDidMount = () => {
     actions.getUser()
+    // re-render app every second
+    setInterval(
+      () => this.setState({ date: new Date().toLocaleTimeString() }),
+      1000,
+    )
   }
   render() {
+    render.root++
     return (
       <Provider>
-        <Count />
-        <Time />
-        <User />
+        <div>{this.state.date}</div>
+        <h1>Connected components</h1>
+        <div className="flex examples">
+          <Count />
+          <User />
+        </div>
+        <h1>Rendering</h1>
+        <p>
+          App <i>{render.root}</i>
+        </p>
+        <p>
+          Count <i>{render.count}</i>
+        </p>
+        <p>
+          User <i>{render.user}</i>
+        </p>
       </Provider>
     )
   }
