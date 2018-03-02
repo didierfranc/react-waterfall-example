@@ -5210,7 +5210,7 @@ react-scripts@1.1.1:
 
 "react-stateful@https://github.com/didierfranc/react-stateful.git":
   version "1.0.0"
-  resolved "https://github.com/didierfranc/react-stateful.git#45475b144afa89049eed8021896ec042064a0af1"
+  resolved "https://github.com/didierfranc/react-stateful.git#645c43da3d34b98722c7f6326f4210cd7fe5d17e"
   dependencies:
     fbjs "^0.8.16"
     global "^4.3.2"

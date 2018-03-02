@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Provider, Consumer, actions, connect } from './store'
+import { Provider, Consumer, actions, connect, subscribe } from './store'
 
 const render = {
   root: 0,
   count: 0,
   user: 0,
 }
+
+subscribe((action, state) => console.log(action, state))
 
 const Count = () => (
   <Consumer select={['count']}>
