@@ -1,4 +1,4 @@
-import { initStore } from "./react-stateful.js";
+import { initStore } from 'react-stateful'
 import { devTool } from './devtool'
 
 function timeout(ms) {
