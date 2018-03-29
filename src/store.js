@@ -26,4 +26,4 @@ export const {
   getState,
   connect,
   subscribe,
-} = initStore(store, reduxDevTool)
+} = initStore(store, reduxDevTool())

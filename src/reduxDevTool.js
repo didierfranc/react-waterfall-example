@@ -1,108 +1,107 @@
-/* eslint-disable */
-import { getState } from './store'
-import {initStore} from "react-waterfall"
+/**
+ * react-waterfall/redux-devtools-extension
+ *
+ * @description Use redux-devtools-extension to debug react-waterfall
+ * @author Eli Sherer [github.com/elisherer]
+ */
+import { getState, actions } from './store'
 
-const DEBUG = false;
-const libName = '[react-waterfall/redux-devtools-extension]'
+const toolName = '[react-waterfall/redux-devtools-extension]'
+const DEBUG = false
+
+const extension = typeof window !== 'undefined' && (window.__REDUX_DEVTOOLS_EXTENSION__ || window.devToolsExtension)
 const pageSource = '@devtools-page'
-const instanceId = 1
-
-const notImplemented = action => () => {
-  console.log(`${libName} ${action} not implemented!`)
-  return { then: () => {} } //mock promise
+const extensionSource = '@devtools-extension'
+const libConfig = {
+  name: '[react-waterfall] ' + document.title,
+  features: {
+    jump: true,
+    skip: false,
+    dispatch: true
+  }
 }
-const liftedStoreInit = {
-  initialState: {
-    actionsById: {},
-    currentStateIndex: 0,
-    isLocked:false,
-    isPaused:false,
-    monitorState:{},
-    nextActionId:1,
-    skippedActionIds:[],
-    stagedActionIds:[0]
-  },
-  actions: 'COMMIT,JUMP_TO_STATE,JUMP_TO_ACTION,TOGGLE_ACTION,REORDER_ACTION,IMPORT_STATE,LOCK_CHANGES,PAUSE_RECORDING'.split(',')
-    .reduce((actions,action) => {
-      actions[action] = notImplemented(action)
-      return actions
-    }, {})
-}
-const liftedStore = initStore(liftedStoreInit)
-liftedStore.dispatch = act => liftedStore.actions[act.type](act.payload)
-new liftedStore.Provider() //initialize the lifted store
 
-const reduxDevTool =
-  // Check if the extension exsits
-  typeof window === 'undefined' || (!window.__REDUX_DEVTOOLS_EXTENSION__ && !window.devToolsExtension)
+const reduxDevTool = (instanceId = 1, maxAge = 50) =>
+  // Check if the extension exists
+  !extension
     ? () => {
-      if (process.env.NODE_ENV !== 'production') console.log(libName + ' You are trying to use redux devtool without the extension installed.')
-      return () => {};
+      DEBUG && console.warn(`${toolName} You are trying to use redux-devtools without the extension installed.`)
+      return () => {}
     }
-    : (storeInit, self) => {
-      let i = 0
-      let snapshots = [{ state: storeInit.initialState }]
+    : (store, self) => {
 
-      const style = `
-        font-size: 12px;
-        color: #673AB7;
-      `
-
-      console.log('%ctime travel with: ⌥ + ←', style)
-
-      window.addEventListener('keydown', e => {
-        if (e.altKey && e.key === 'ArrowLeft') {
-          self.state = {}
-          i = i > 0 ? i - 1 : i
-          self.setState(snapshots[i].state)
+      window.addEventListener('message', message => {
+        if (message.data && message.data.source !== extensionSource) return
+        const { type, payload } = message.data
+        DEBUG && console.log(type, message.data)
+        switch (type) {
+          case 'ACTION': {
+            const expression = payload.replace('this.','').split('(')
+            if (typeof actions[expression[0]] === 'function') {
+              const args = expression[1] ? expression[1].slice(0,-1).split(',') : []
+              actions[expression[0]](...args)
+              return
+            }
+            console.warn(`${toolName} The ACTION '${payload}' was not recognized.`)
+            return
+          }
+          case 'DISPATCH': {
+            switch (payload.type) {
+              case 'COMMIT': {
+                break // ?
+              }
+              case 'RESET': {
+                self.setState(store.initialState)
+                return
+              }
+              case 'ROLLBACK':
+              case 'JUMP_TO_STATE':
+              case 'JUMP_TO_ACTION': {
+                const newState = message.data.state && JSON.parse(message.data.state)
+                self.setState(newState)
+                return
+              }
+              default:
+                break
+            }
+            break
+          }
+          default:
+            break
         }
-
-        if (e.altKey && e.key === 'ArrowRight') {
-          self.state = {}
-          i = i < snapshots.length - 1 ? i + 1 : i
-          self.setState(snapshots[i].state)
-        }
-      })
-
-      DEBUG && window.addEventListener('message', message => {
-        if (message.data && message.data.source.startsWith('react-devtools')) return // ignore react-devtool
-        console.log(message.data.type, message.data)
+        console.warn(`${toolName} The action ${type}.${payload ? payload.type : 'N/A'} is unsupported`)
       })
 
       let actionId = 0
-      const getNextActionId = () => actionId++
+      const getNextActionId = () => ++actionId
       const mockReduxDevToolsAction = (type, payload) => {
         window.postMessage({
           type: 'ACTION',
           action: JSON.stringify({
             type: "PERFORM_ACTION",
             action: {
-              type,
-              payload: {dummy: false},
+              type
             },
             timestamp: Date.now()
           }),
           instanceId,
-          maxAge: 50,
+          maxAge,
           nextActionId: getNextActionId(),
-          libConfig: {name: document.title },
+          libConfig,
           payload,
           source: pageSource
         }, '*')
       }
 
-      mockReduxDevToolsAction('@@INIT', storeInit.initialState)
+      mockReduxDevToolsAction('@@INIT', store.initialState)
 
       return action => {
         // Since redux-devtools-extension was not initialized properly yet,
         // we need to add the @@INIT action again so it won't be overwritten
         if (actionId === 1) {
-          mockReduxDevToolsAction('@@INIT', storeInit.initialState)
+          mockReduxDevToolsAction('@@INIT', store.initialState)
         }
         mockReduxDevToolsAction(action, JSON.stringify(getState()))
-
-        snapshots.push({ action, state: self.state })
-        i = snapshots.length - 1
       }
     }
 
