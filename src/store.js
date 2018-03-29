@@ -1,5 +1,6 @@
-import { initStore } from 'react-stateful'
-import { devTool } from './devtool'
+import { initStore } from 'react-waterfall'
+//import { devTool } from './devtool'
+import reduxDevTool from "./reduxDevTool";
 
 const store = {
   initialState: {
@@ -25,4 +26,4 @@ export const {
   getState,
   connect,
   subscribe,
-} = initStore(store, devTool)
+} = initStore(store, reduxDevTool)

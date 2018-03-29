@@ -6,7 +6,7 @@
     "react": "^16.3.0-alpha.1",
     "react-dom": "^16.3.0-alpha.1",
     "react-scripts": "1.1.1",
-    "react-stateful": "https://github.com/didierfranc/react-stateful.git"
+    "react-waterfall": "elisherer/react-waterfall#5a30631"
   },
   "scripts": {
     "start": "react-scripts start",
