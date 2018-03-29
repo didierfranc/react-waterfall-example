@@ -20,6 +20,8 @@ const libConfig = {
     dispatch: true
   }
 }
+let started = false;
+const queuedActions = [];
 
 const reduxDevTool = (instanceId = 1, maxAge = 50) =>
   // Check if the extension exists
@@ -35,6 +37,19 @@ const reduxDevTool = (instanceId = 1, maxAge = 50) =>
         const { type, payload } = message.data
         DEBUG && console.log(type, message.data)
         switch (type) {
+          case 'START': {
+            started = true
+            let actionArgs = queuedActions.shift()
+            while (actionArgs) {
+              mockReduxDevToolsAction.apply(window, actionArgs)
+              actionArgs = queuedActions.shift()
+            }
+            return;
+          }
+          case 'STOP': {
+            started = false
+            return;
+          }
           case 'ACTION': {
             const expression = payload.replace('this.','').split('(')
             if (typeof actions[expression[0]] === 'function') {
@@ -75,6 +90,10 @@ const reduxDevTool = (instanceId = 1, maxAge = 50) =>
       let actionId = 0
       const getNextActionId = () => ++actionId
       const mockReduxDevToolsAction = (type, payload) => {
+        if (!started) {
+          queuedActions.push([type, payload])
+          return
+        }
         window.postMessage({
           type: 'ACTION',
           action: JSON.stringify({
@@ -93,14 +112,14 @@ const reduxDevTool = (instanceId = 1, maxAge = 50) =>
         }, '*')
       }
 
+      window.postMessage({
+        type: 'INIT_INSTANCE',
+        instanceId,
+        source: pageSource
+      }, '*')
       mockReduxDevToolsAction('@@INIT', store.initialState)
 
       return action => {
-        // Since redux-devtools-extension was not initialized properly yet,
-        // we need to add the @@INIT action again so it won't be overwritten
-        if (actionId === 1) {
-          mockReduxDevToolsAction('@@INIT', store.initialState)
-        }
         mockReduxDevToolsAction(action, JSON.stringify(getState()))
       }
     }
