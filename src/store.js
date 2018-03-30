@@ -1,6 +1,6 @@
 import { initStore } from 'react-waterfall'
 //import { devTool } from './devtool'
-import reduxDevTool from "./reduxDevTool";
+import reduxDevTool from "react-waterfall-redux-devtools-middleware";
 
 const store = {
   initialState: {

@@ -5187,6 +5187,10 @@ react-scripts@1.1.1:
   optionalDependencies:
     fsevents "^1.1.3"
 
+react-waterfall-redux-devtools-middleware@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-waterfall-redux-devtools-middleware/-/react-waterfall-redux-devtools-middleware-3.0.0.tgz#32b78a171ab298d7eb1c31b67d43590f24ded46c"
+
 react-waterfall@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-waterfall/-/react-waterfall-3.0.0.tgz#cdde5b371698cfaa97e28220713cc0c01820b80f"
