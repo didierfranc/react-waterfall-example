@@ -1,12 +1,13 @@
 {
-  "name": "react-stateful-example",
-  "version": "0.1.0",
+  "name": "react-waterfall-example",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "react": "^16.3.0-alpha.1",
-    "react-dom": "^16.3.0-alpha.1",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
     "react-scripts": "1.1.1",
-    "react-stateful": "https://github.com/didierfranc/react-stateful.git"
+    "react-waterfall": "^3.0.0",
+    "react-waterfall-redux-devtools-middleware": "^3.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

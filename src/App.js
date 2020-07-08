@@ -10,12 +10,12 @@ const render = {
 subscribe((action, state) => console.log(action, state))
 
 const Count = () => (
-  <Consumer select={['count']}>
-    {({ state, actions }) => {
+  <Consumer mapStateToProps={state => ({ count: state.count })}>
+    {({ count, actions }) => {
       render.count++
       return (
         <div>
-          <span>{state.count}</span>
+          <span>{count}</span>
           <button onClick={actions.increment}>+</button>
         </div>
       )
@@ -23,12 +23,12 @@ const Count = () => (
   </Consumer>
 )
 
-let User = ({ state }) => {
+let User = ({ user }) => {
   render.user++
-  return state.user && <img src={state.user.avatar} width={50} alt="avatar" />
+  return user && <img src={user.avatar} width={50} alt="avatar" />
 }
 
-User = connect(['user'])(User)
+User = connect(state => ({ user: state.user }))(User)
 
 class App extends Component {
   state = {
