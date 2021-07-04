@@ -23,19 +23,47 @@ const Count = () => (
   </Consumer>
 )
 
-let User = ({ state }) => {
-  render.user++
-  return state.user && <img src={state.user.avatar} width={50} alt="avatar" />
+class User extends Component {
+  constructor(props) {
+    super(props)
+    this.handleSubmit = this.handleSubmit.bind(this)
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+    actions.getUser(this.input.value)
+  }
+
+  render() {
+    const { state } = this.props
+    render.user++
+    return (
+      <div>
+        {state.user && (
+          <div>
+            <img src={state.user.avatar} width={50} alt='avatar' />
+          </div>
+        )}
+        <form onSubmit={this.handleSubmit}>
+          <input type='text' ref={input => (this.input = input)} />
+          <input
+            type='submit'
+            value={state.loading ? 'loading...' : 'load user'}
+          />
+        </form>
+      </div>
+    )
+  }
 }
 
-User = connect(['user'])(User)
+User = connect(['user', 'loading'])(User)
 
 class App extends Component {
   state = {
     date: new Date().toLocaleTimeString(),
   }
   componentDidMount = () => {
-    actions.getUser()
+    actions.getUser('didierfranc')
     // re-render app every second
     setInterval(
       () => this.setState({ date: new Date().toLocaleTimeString() }),
